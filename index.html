@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dolt</title>
+    <meta name="description" content="Dolt - Uma ferramenta para gamificar seus estudos, aumentar o foco e consolidar conhecimento com técnicas comprovadas.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        // Configuração do Tailwind para modo escuro
+        tailwind.config = { darkMode: 'class' }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 flex items-center justify-center min-h-screen dark:bg-slate-900 dark:text-slate-200">
+
+  <div class="retro-background-container"></div>
+
+    <header id="fixed-ui-elements" class="absolute top-4 left-4 right-4 flex justify-between items-start z-10 hidden">
+        <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-2 px-4 rounded-lg shadow">
+            <span class="font-bold text-lg" id="points-display-fixed">💰 0 Pontos</span>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl mx-auto p-4 md:p-8 text-center">
+        
+        <section id="screen-welcome" class="relative space-y-8 fade-in">
+             <div class="absolute top-0 right-0">
+                <button type="button" id="premium-btn" class="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-900 font-semibold py-2 px-4 rounded-lg shadow-lg hover:from-amber-500 hover:to-yellow-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-yellow-800"><path d="M19.14,2.5a2,2,0,0,0-1.28.45L12,8.27,6.14,2.95A2,2,0,0,0,4.86,2.5,2,2,0,0,0,3.52,4.78l1.37,6.85a2,2,0,0,0,2,1.65h10.22a2,2,0,0,0,2-1.65L20.48,4.78A2,2,0,0,0,19.14,2.5Z"></path><path d="M20.48,14.78,19.11,8,4.89,8,3.52,14.78a2,2,0,0,0,2,2.5h13a2,2,0,0,0,2-2.5Z"></path></svg>
+                    <span>Premium</span>
+                </button>
+            </div>
+
+            <div class="flex justify-center items-center gap-4">
+                <h1 class="text-5xl font-bold text-slate-900 dark:text-white">Dolt</h1>
+                <button type="button" id="change-mural-theme-btn" title="Mudar Tema do Mural" class="bg-white dark:bg-slate-800 p-2 rounded-full shadow-md hover:bg-slate-200 dark:hover:bg-slate-700"><span aria-hidden="true">🎨</span></button>
+            </div>
+            <div>
+                <h2 class="text-3xl font-semibold text-slate-800 dark:text-white">Bem-vindo(a) de volta!</h2>
+                <p class="text-lg text-slate-600 dark:text-slate-400 mt-1">Aqui está o resumo da sua jornada.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg text-left">
+                    <span id="dashboard-level-name" class="text-2xl font-bold text-sky-500">Novato</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Nível Atual</p>
+                    <div class="mt-4">
+                        <div class="progress-bar-bg w-full h-2">
+                            <div id="dashboard-level-progress" class="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <p id="dashboard-xp-display" class="text-xs text-right mt-1 text-slate-500 dark:text-slate-400">0/60 XP</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg text-left">
+                    <span class="text-3xl" aria-hidden="true">🔥</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2">Streak Atual</p>
+                    <p id="dashboard-streak" class="text-3xl font-bold dark:text-white">0 dias</p>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg text-left">
+                    <span class="text-3xl" aria-hidden="true">⏱️</span>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2">Tempo Total de Foco</p>
+                    <p id="dashboard-total-time" class="text-3xl font-bold dark:text-white">0m</p>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-2xl font-semibold text-left mb-4 dark:text-white">Missões</h2>
+                <div id="dashboard-missions" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg"></div>
+            </div>
+            <div>
+                <h2 class="text-2xl font-semibold text-left mb-4 dark:text-white">Suas Conquistas</h2>
+                <div id="dashboard-badges" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg"></div>
+            </div>
+            <div>
+                <h2 class="text-2xl font-semibold text-left mb-4 dark:text-white">Atividade da Semana</h2>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg">
+                    <div id="dashboard-chart" class="flex justify-around items-end h-48 border-b-2 border-slate-200 dark:border-slate-700"></div>
+                    <div id="dashboard-chart-labels" class="flex justify-around mt-2 text-sm text-slate-500 dark:text-slate-400"></div>
+                </div>
+            </div>
+            <div class="pt-4 space-y-4">
+                 <button type="button" id="start-btn" class="w-full bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300">Iniciar Nova Sessão de Foco</button>
+                 <button type="button" id="review-flashcards-btn" class="w-full bg-slate-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-600 dark:bg-sky-700 dark:hover:bg-sky-800 transition-colors duration-300" disabled>Revisar Flashcards (0)</button>
+                <button type="button" id="unlocks-btn" class="w-full bg-transparent text-amber-600 dark:text-amber-400 font-semibold py-2 px-6 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors duration-300">Ver Loja de Recompensas</button>
+            </div>
+        </section>
+
+        <section id="screen-intention" class="hidden space-y-6 fade-in">
+            <h2 class="text-3xl font-semibold dark:text-white">Qual é a sua ÚNICA meta para esta sessão?</h2>
+            <textarea id="intention-input" class="w-full h-32 p-4 border-2 bg-transparent border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 dark:focus:ring-sky-500 dark:focus:border-sky-500 transition" placeholder="Ex: Entender o Capítulo 3 de Biologia e fazer um resumo."></textarea>
+            <div class="flex flex-col sm:flex-row-reverse gap-4 justify-center">
+                <button type="button" id="intention-next-btn" class="bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300 disabled:opacity-50" disabled>Próximo</button>
+                <button type="button" id="intention-back-btn" class="bg-transparent text-slate-600 dark:text-slate-400 font-semibold py-3 px-8 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300">Voltar ao Mural</button>
+            </div>
+        </section>
+
+        <section id="screen-technique" class="hidden space-y-8 fade-in">
+             <h2 class="text-3xl font-semibold dark:text-white">Escolha seu método de foco/estudo.</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div id="technique-pomodoro" class="p-6 border-2 border-slate-300 dark:border-slate-700 rounded-lg hover:border-slate-900 dark:hover:border-sky-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition">
+                    <h3 class="text-xl font-bold dark:text-white">Técnica Pomodoro</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mt-2">Foco em blocos curtos para tarefas e revisões.</p>
+                </div>
+                <div id="technique-feynman" class="p-6 border-2 border-slate-300 dark:border-slate-700 rounded-lg hover:border-slate-900 dark:hover:border-sky-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition">
+                    <h3 class="text-xl font-bold dark:text-white">Técnica Feynman</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mt-2">Imersão de 45 minutos para entender temas complexos.</p>
+                </div>
+                <div id="technique-connections" class="p-6 border-2 border-slate-300 dark:border-slate-700 rounded-lg hover:border-slate-900 dark:hover:border-sky-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition">
+                    <h3 class="text-xl font-bold dark:text-white">Conexões Profundas</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mt-2">Sessão guiada para criar conexões e aprofundar o saber.</p>
+                </div>
+                <div id="technique-sq3r" class="p-6 border-2 border-slate-300 dark:border-slate-700 rounded-lg hover:border-slate-900 dark:hover:border-sky-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition">
+                    <h3 class="text-xl font-bold dark:text-white">Leitura Ativa (SQ3R)</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mt-2">Jornada guiada para extrair o máximo de textos e artigos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-sq3r-survey" class="hidden space-y-6 fade-in">
+            <h2 class="text-3xl font-semibold dark:text-white">Leitura Ativa - Passo 1/5: Inspecionar (Survey)</h2>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Folheie seu material por 3-5 minutos. Olhe os títulos, subtítulos, imagens em destaque e o resumo. O objetivo é ter uma visão geral do conteúdo. Não leia em detalhes.</p>
+            <div class="bg-sky-100 dark:bg-sky-900/50 p-4 rounded-lg">
+                <p class="font-semibold text-sky-800 dark:text-sky-200">Quando terminar, clique em 'Próximo'.</p>
+            </div>
+            <button type="button" id="sq3r-survey-next-btn" class="bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300">Próximo</button>
+        </section>
+
+        <section id="screen-sq3r-question" class="hidden space-y-6 fade-in">
+            <h2 class="text-3xl font-semibold dark:text-white">Leitura Ativa - Passo 2/5: Perguntar (Question)</h2>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Com base na sua inspeção, transforme os títulos e subtítulos em perguntas. O que você espera aprender? Escreva de 3 a 5 perguntas-chave abaixo.</p>
+            <div id="sq3r-question-inputs" class="space-y-3">
+                <input type="text" class="sq3r-question-input w-full p-3 bg-transparent border-2 border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:border-sky-500" placeholder="Pergunta 1...">
+                <input type="text" class="sq3r-question-input w-full p-3 bg-transparent border-2 border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:border-sky-500" placeholder="Pergunta 2...">
+                <input type="text" class="sq3r-question-input w-full p-3 bg-transparent border-2 border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:border-sky-500" placeholder="Pergunta 3...">
+            </div>
+             <button type="button" id="sq3r-add-question-btn" class="text-sm text-sky-600 dark:text-sky-400 font-semibold hover:underline">+ Adicionar mais uma pergunta</button>
+            <button type="button" id="sq3r-question-next-btn" class="bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300 disabled:opacity-50" disabled>Iniciar Leitura</button>
+        </section>
+        
+        <section id="screen-sq3r-recite" class="hidden space-y-6 fade-in">
+            <h2 class="text-3xl font-semibold dark:text-white">Leitura Ativa - Passo 4/5: Recitar (Recite)</h2>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Excelente! Agora, sem olhar seu material, tente responder com suas próprias palavras às perguntas que você formulou.</p>
+            <div id="sq3r-recite-container" class="space-y-4 text-left"></div>
+            <button type="button" id="sq3r-recite-next-btn" class="bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300">Finalizar e Revisar</button>
+        </section>
+
+        <section id="screen-timer" class="hidden space-y-4 fade-in">
+            <div class="relative bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-lg mx-auto transition-colors duration-300">
+                <div id="pomodoro-info" class="absolute top-4 left-4 text-left hidden">
+                    <p id="timer-status" class="font-bold text-lg text-sky-500"></p>
+                    <p id="cycle-counter" class="text-sm text-slate-500 dark:text-slate-400"></p>
+                </div>
+                <div class="absolute top-4 right-4 flex items-center gap-2">
+                     <button type="button" id="pause-btn" class="p-2 rounded-full bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors"></button>
+                    <div id="theme-switch-container" class="hidden">
+                        <input type="checkbox" id="theme-switch" class="theme-switch hidden">
+                        <label for="theme-switch" class="switch-label cursor-pointer flex items-center w-12 h-6 bg-slate-200 dark:bg-slate-700 rounded-full p-1">
+                            <span class="switch-dot w-4 h-4 bg-white dark:bg-slate-400 rounded-full shadow-md transform transition-transform duration-300 ease-in-out"></span>
+                        </label>
+                    </div>
+                </div>
+                <p id="timer-intention-display" class="text-slate-600 dark:text-slate-400 mb-2 truncate" title="Sua meta"></p>
+                <h1 id="timer-display" class="text-8xl md:text-9xl font-bold text-slate-900 dark:text-white mb-4 tracking-tighter">25:00</h1>
+                
+                <div id="sq3r-questions-display-timer" class="text-left hidden bg-slate-100 dark:bg-slate-700/50 p-3 rounded-lg max-w-md mx-auto max-h-32 overflow-y-auto mb-16">
+                    <h4 class="font-bold text-sm mb-1 text-sky-600 dark:text-sky-400">Suas Perguntas-Guia:</h4>
+                    <ul id="sq3r-questions-list-timer" class="text-xs list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300"></ul>
+                </div>
+
+                <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
+                    <button type="button" class="sound-btn p-2 rounded-full bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors" data-sound="rain" title="Chuva"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500" aria-hidden="true"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/></svg></button>
+                    <button type="button" class="sound-btn p-2 rounded-full bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors" data-sound="wind" title="Vento"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></button>
+                    <button type="button" class="sound-btn p-2 rounded-full bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors" data-sound="coffee" title="Cafeteria"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg></button>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-prompt-category" class="hidden space-y-8 fade-in">
+            <h2 class="text-3xl font-semibold dark:text-white">Prática de Recuperação Ativa</h2>
+            <p class="text-slate-600 dark:text-slate-400 max-w-lg mx-auto">Selecione uma categoria para gerar uma pergunta e fortalecer seu aprendizado.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button type="button" data-category="teorico" class="prompt-category-btn p-6 border-2 border-slate-300 dark:border-slate-700 rounded-lg hover:border-sky-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <h3 class="text-lg font-bold dark:text-white">Conceitos Teóricos</h3>
+                </button>
+                <button type="button" data-category="problemas" class="prompt-category-btn p-6 border-2 border-slate-300 dark:border-slate-700 rounded-lg hover:border-sky-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <h3 class="text-lg font-bold dark:text-white">Resolução de Problemas</h3>
+                </button>
+                <button type="button" data-category="pratico" class="prompt-category-btn p-6 border-2 border-slate-300 dark:border-slate-700 rounded-lg hover:border-sky-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <h3 class="text-lg font-bold dark:text-white">Habilidades Práticas</h3>
+                </button>
+            </div>
+        </section>
+
+        <section id="screen-prompt-response" class="hidden space-y-6 fade-in">
+            <h2 class="text-3xl font-semibold dark:text-white">Responda ao Prompt</h2>
+            <div class="bg-slate-100 dark:bg-slate-800 p-6 rounded-lg text-left shadow-inner">
+                <p id="prompt-question-display" class="text-lg font-medium text-slate-800 dark:text-slate-200"></p>
+            </div>
+            <textarea id="prompt-answer-input" class="w-full h-40 p-4 bg-transparent border-2 border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:border-sky-500 transition" placeholder="Escreva sua resposta aqui..."></textarea>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <button type="button" id="regenerate-prompt-btn" class="bg-transparent text-slate-600 dark:text-slate-400 font-semibold py-2 px-6 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300">Gerar outra pergunta</button>
+                <button type="button" id="prompt-continue-btn" class="bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300">Continuar</button>
+            </div>
+        </section>
+
+        <section id="screen-consolidation" class="hidden space-y-6 fade-in">
+             <h2 id="consolidation-question" class="text-3xl font-semibold dark:text-white"></h2>
+            <textarea id="consolidation-input" class="w-full h-40 p-4 bg-transparent border-2 border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 dark:focus:ring-sky-500 dark:focus:border-sky-500 transition" placeholder="Seja breve e direto..."></textarea>
+            <button type="button" id="consolidation-finish-btn" class="bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300">Finalizar Sessão</button>
+        </section>
+
+        <section id="screen-result" class="hidden space-y-6 fade-in">
+            <div id="theme-selector" class="flex justify-center gap-2 flex-wrap"></div>
+            <div id="knowledge-card" class="bg-white p-8 rounded-2xl shadow-2xl text-left space-y-4 border-4 border-slate-900 transition-colors duration-300">
+                <p class="text-sm font-semibold text-slate-500">Hoje eu dominei:</p>
+                <h3 id="result-intention" class="text-2xl font-bold text-slate-900"></h3>
+                <p class="text-sm font-semibold text-slate-500 pt-2">Técnica Utilizada:</p>
+                <p id="result-technique" class="text-lg font-medium bg-slate-100 inline-block px-3 py-1 rounded-md"></p>
+                
+                <div id="default-result-container">
+                    <div id="prompt-result-container" class="hidden space-y-4">
+                        <p class="text-sm font-semibold text-slate-500 pt-2">Pergunta de Recuperação:</p>
+                        <p id="result-prompt-question" class="text-slate-700 italic border-l-4 border-sky-200 dark:border-sky-800 pl-4"></p>
+                        <p class="text-sm font-semibold text-slate-500 pt-2">Sua Resposta:</p>
+                        <p id="result-prompt-answer" class="text-slate-700 italic border-l-4 border-slate-200 pl-4"></p>
+                    </div>
+                    <div id="summary-result-container">
+                        <p class="text-sm font-semibold text-slate-500 pt-2">Minha reflexão:</p>
+                        <p id="result-summary" class="text-slate-700 italic border-l-4 border-slate-200 pl-4"></p>
+                    </div>
+                </div>
+
+                <div id="elaboration-result-container" class="hidden space-y-4"></div>
+
+                <div id="sq3r-result-container" class="hidden space-y-4">
+                    <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg mt-4">
+                        <h4 class="font-bold text-center text-lg mb-2 text-slate-800 dark:text-slate-200">Passo 5/5: Revisar (Review)</h4>
+                        <p class="text-sm text-center text-slate-600 dark:text-slate-400">Compare suas respostas com o material original. Estão corretas e completas? Adicione ou corrija os detalhes finais na sua reflexão abaixo.</p>
+                    </div>
+                    <textarea id="sq3r-review-reflection" class="w-full h-24 p-3 bg-transparent border-2 border-slate-300 dark:border-slate-600 rounded-lg" placeholder="Escreva sua reflexão final aqui..."></textarea>
+                </div>
+                
+                <p class="text-center text-sm text-slate-400 pt-6">Criado com - Dolt</p>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 flex-wrap">
+                <button type="button" id="download-card-btn" class="w-full md:w-auto bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300">Baixar Card</button>
+                <button type="button" id="create-flashcard-btn" class="w-full md:w-auto bg-green-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-green-700 transition-colors duration-300">Criar Flashcards</button>
+                <button type="button" id="share-card-btn" class="w-full md:w-auto bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300">Compartilhar</button>
+                <button type="button" id="back-to-start-btn" class="w-full md:w-auto bg-transparent text-slate-600 dark:text-slate-400 font-semibold py-2 px-6 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300">Voltar ao Mural</button>
+            </div>
+        </section>
+
+        <section id="screen-review" class="hidden space-y-6 fade-in w-full max-w-2xl mx-auto">
+            <div class="flex justify-between items-center">
+                <h2 class="text-3xl font-semibold dark:text-white">Sessão de Revisão</h2>
+                <span id="review-progress" class="font-bold text-slate-500 dark:text-slate-400"></span>
+            </div>
+            <div id="flashcard-container" class="flashcard h-64 md:h-80">
+                <div class="flashcard-inner">
+                    <div id="flashcard-front" class="flashcard-front bg-white dark:bg-slate-800 shadow-xl text-2xl font-semibold"></div>
+                    <div id="flashcard-back" class="flashcard-back bg-slate-100 dark:bg-slate-700 shadow-xl text-xl"></div>
+                </div>
+            </div>
+            <div id="review-actions" class="flex justify-center">
+                <button type="button" id="show-answer-btn" class="bg-sky-500 text-white font-semibold py-3 px-12 rounded-lg shadow-lg hover:bg-sky-600 transition-colors duration-300">Mostrar Resposta</button>
+            </div>
+            <div id="review-ratings" class="hidden justify-center gap-4">
+                <button type="button" data-rating="again" class="review-rating-btn w-full md:w-auto bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg">Errei</button>
+                <button type="button" data-rating="good" class="review-rating-btn w-full md:w-auto bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg">Difícil</button>
+                <button type="button" data-rating="easy" class="review-rating-btn w-full md:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg">Fácil</button>
+            </div>
+            <button type="button" id="review-finish-btn" class="text-slate-500 dark:text-slate-400 hover:text-sky-500 mt-4">Finalizar Revisão</button>
+        </section>
+        
+        <section id="screen-elaboration" class="hidden space-y-6 fade-in">
+            <h2 class="text-3xl font-semibold dark:text-white">Sessão de Elaboração</h2>
+            <div class="bg-slate-100 dark:bg-slate-800 p-6 rounded-lg text-left shadow-inner">
+                <p id="elaboration-prompt-display" class="text-lg font-medium text-slate-800 dark:text-slate-200"></p>
+            </div>
+            <textarea id="elaboration-answer-input" class="w-full h-40 p-4 bg-transparent border-2 border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:border-sky-500 transition" placeholder="Escreva sua reflexão aqui..."></textarea>
+            <div class="flex justify-between items-center">
+                <span id="elaboration-progress" class="text-sm font-semibold text-slate-500 dark:text-slate-400"></span>
+                <button type="button" id="elaboration-next-btn" class="bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300">Próximo</button>
+            </div>
+        </section>
+
+    </main>
+    
+    <div id="unlocks-modal" role="dialog" aria-modal="true" aria-labelledby="unlocks-modal-title" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 fade-in">
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl p-6 w-full max-w-lg space-y-6 flex flex-col">
+            <div class="flex justify-between items-center">
+                <h2 id="unlocks-modal-title" class="text-2xl font-bold dark:text-white">Loja de Recompensas</h2>
+                <button type="button" id="unlocks-close-btn" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 text-3xl leading-none">&times;</button>
+            </div>
+            <p class="text-center font-semibold text-lg">💰 <span id="store-points-display">0</span> Pontos</p>
+            <div class="flex-1 space-y-4 overflow-y-auto max-h-[60vh] pr-2">
+                <div>
+                    <h3 class="font-semibold text-lg mb-2 text-left dark:text-white">Para Desbloquear</h3>
+                    <div id="locked-items-list" class="space-y-2"></div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-2 text-left dark:text-white">Já Desbloqueados</h3>
+                    <div id="unlocked-items-list" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="hidden fixed bottom-5 right-5 bg-slate-900 dark:bg-sky-500 text-white py-2 px-4 rounded-lg shadow-xl transform translate-y-20 transition-transform duration-300">
+        <p id="toast-message"></p>
+    </div>
+
+    <div id="pomodoro-cycles-modal" role="dialog" aria-modal="true" aria-labelledby="pomodoro-modal-title" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 fade-in">
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl p-6 w-full max-w-sm space-y-6 text-center">
+            <h2 id="pomodoro-modal-title" class="text-2xl font-bold dark:text-white">Ciclos Pomodoro</h2>
+            <p class="dark:text-slate-300">Quantos ciclos de foco você deseja completar?</p>
+            <div id="cycle-options" class="flex justify-center gap-3"></div>
+            <div class="flex justify-end gap-4 pt-4">
+                <button type="button" id="cycles-cancel-btn" class="bg-transparent text-slate-600 dark:text-slate-400 px-4 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700">Cancelar</button>
+                <button type="button" id="cycles-start-btn" class="bg-sky-500 text-white px-6 py-2 rounded-md hover:bg-sky-600" disabled>Iniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 text-center space-y-4 transform transition-all scale-95 opacity-0">
+             <h2 id="info-modal-title" class="text-3xl font-bold dark:text-white"></h2>
+             <p id="info-modal-message" class="text-slate-600 dark:text-slate-400"></p>
+             <button type="button" id="info-modal-close-btn" class="mt-4 bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600">Ok</button>
+        </div>
+    </div>
+
+    <div id="create-flashcard-modal" role="dialog" aria-modal="true" aria-labelledby="flashcard-modal-title" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 w-full max-w-lg space-y-4 transform transition-all scale-95 opacity-0">
+            <div class="flex justify-between items-center">
+                <h2 id="flashcard-modal-title" class="text-2xl font-bold dark:text-white">Criar Novo Flashcard</h2>
+                <button type="button" id="flashcard-modal-close-btn" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 text-3xl leading-none">&times;</button>
+            </div>
+            <div class="space-y-4 text-left">
+                <div>
+                    <label for="flashcard-deck-input" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Baralho</label>
+                    <input type="text" id="flashcard-deck-input" class="w-full p-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg" placeholder="Ex: Biologia - Capítulo 3">
+                </div>
+                <div>
+                    <label for="flashcard-front-input" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Frente (Pergunta)</label>
+                    <textarea id="flashcard-front-input" rows="3" class="w-full p-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg" placeholder="Qual é a função da mitocôndria?"></textarea>
+                </div>
+                <div>
+                    <label for="flashcard-back-input" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Verso (Resposta)</label>
+                    <textarea id="flashcard-back-input" rows="3" class="w-full p-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg" placeholder="Respiração celular e produção de ATP."></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-4 pt-4">
+                <button type="button" id="flashcard-save-btn" class="bg-sky-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-sky-600">Salvar Card</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mural-theme-modal" role="dialog" aria-modal="true" aria-labelledby="mural-theme-modal-title" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 w-full max-w-md space-y-4 transform transition-all scale-95 opacity-0">
+            <div class="flex justify-between items-center">
+                 <h2 id="mural-theme-modal-title" class="text-2xl font-bold dark:text-white">Temas do Mural</h2>
+                <button type="button" id="mural-theme-close-btn" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 text-3xl leading-none">&times;</button>
+            </div>
+            <div id="mural-theme-options" class="grid grid-cols-2 gap-4 pt-4"></div>
+        </div>
+    </div>
+    
+    <div id="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-modal-title" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 w-full max-w-md space-y-4 transform transition-all scale-95 opacity-0">
+            <div class="flex justify-between items-center">
+                 <h2 id="share-modal-title" class="text-2xl font-bold dark:text-white">Compartilhe seu Progresso</h2>
+                <button type="button" id="share-modal-close-btn" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 text-3xl leading-none">&times;</button>
+            </div>
+            <p class="text-slate-600 dark:text-slate-400">Para a melhor experiência, baixe seu card primeiro e depois anexe na sua postagem!</p>
+            <button type="button" id="share-download-card-btn" class="w-full bg-slate-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300">1. Baixar Card</button>
+            <div class="pt-4 space-y-3">
+                 <p class="font-semibold text-left dark:text-white">2. Compartilhe em:</p>
+                 <a id="share-twitter-btn" href="#" target="_blank" class="flex items-center justify-center gap-2 w-full text-center bg-[#1DA1F2] text-white font-bold py-2 px-4 rounded-lg hover:bg-opacity-90">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                    <span>Compartilhar no X (Twitter)</span>
+                </a>
+                 <a id="share-linkedin-btn" href="#" target="_blank" class="flex items-center justify-center gap-2 w-full text-center bg-[#0077B5] text-white font-bold py-2 px-4 rounded-lg hover:bg-opacity-90">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 114.75 6.5 1.75 1.75 0 016.5 8.25zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.62 1.62 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path></svg>
+                     <span>Compartilhar no LinkedIn</span>
+                </a>
+                 <p class="text-sm text-slate-500 dark:text-slate-400 pt-2">Para Instagram e Pinterest, baixe o card e crie uma nova postagem manualmente.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
+
+

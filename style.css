@@ -1,0 +1,372 @@
+/* ==========================================================================
+   ÍNDICE (TABLE OF CONTENTS)
+   ==========================================================================
+   1. ESTILOS GLOBAIS E ANIMAÇÕES
+      - body, .fade-in, keyframes, botões desabilitados
+   2. TEMAS DOS CARDS (KNOWLEDGE CARD)
+      - Dark
+      - Nature
+      - Ocean
+      - Space
+      - Retro
+   3. TEMAS DO MURAL (BODY)
+      - Forest
+      - Beach
+      - Lofi
+      - Zen Garden
+      - Mountain Cabin
+      - Retro Arcade
+   4. COMPONENTES
+      - Flashcard (Revisão)
+      - Barra de Progresso
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. ESTILOS GLOBAIS E ANIMAÇÕES
+   ========================================================================== */
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.fade-in { 
+    animation: fadeIn 0.5s ease-in-out; 
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.theme-switch:checked + .switch-label .switch-dot { 
+    transform: translateX(100%); 
+}
+
+.sound-btn:disabled, button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================================
+   2. TEMAS DOS CARDS (KNOWLEDGE CARD)
+   ========================================================================== */
+
+/* Tema Dark */
+#knowledge-card.theme-dark {
+    --card-bg: #1E293B;
+    --card-border: #38BDF8;
+    --card-text: #F1F5F9;
+    --card-accent-bg: #334155;
+    --card-italic-border: #475569;
+
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+}
+#knowledge-card.theme-dark * { color: var(--card-text); }
+#knowledge-card.theme-dark #result-technique { background-color: var(--card-accent-bg); }
+#knowledge-card.theme-dark .italic { border-color: var(--card-italic-border); }
+
+/* Tema Natureza */
+#knowledge-card.theme-nature {
+    --card-bg: #F0FFF4;
+    --card-border: #228B22;
+    --card-text: #006400;
+    --card-accent-bg: #98FB98;
+    --card-italic-border: #6B8E23;
+
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+}
+#knowledge-card.theme-nature * { color: var(--card-text); }
+#knowledge-card.theme-nature #result-technique { background-color: var(--card-accent-bg); }
+#knowledge-card.theme-nature .italic { border-color: var(--card-italic-border); }
+
+/* Tema Oceano */
+#knowledge-card.theme-ocean {
+    --card-bg: #E0F7FA;
+    --card-border: #0077C2;
+    --card-text: #004D7A;
+    --card-accent-bg: #B2EBF2;
+    --card-italic-border: #4DD0E1;
+
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+}
+#knowledge-card.theme-ocean * { color: var(--card-text); }
+#knowledge-card.theme-ocean #result-technique { background-color: var(--card-accent-bg); }
+#knowledge-card.theme-ocean .italic { border-color: var(--card-italic-border); }
+
+/* Tema Espacial com Estrelas */
+#knowledge-card.theme-space {
+    --card-bg: #1A202C;
+    --card-border: #7B68EE;
+    --card-text: #E2E8F0;
+    --card-accent-bg: #4A5568;
+    --card-italic-border: #A78BFA;
+    
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    position: relative;
+    overflow: hidden;
+}
+#knowledge-card.theme-space * {
+    color: var(--card-text);
+    z-index: 1; 
+    position: relative;
+}
+#knowledge-card.theme-space #result-technique { background-color: var(--card-accent-bg); }
+#knowledge-card.theme-space .italic { border-color: var(--card-italic-border); }
+
+/* Tema Retrô Aprimorado */
+#knowledge-card.theme-retro {
+    --card-bg: #212121;
+    --card-border: #FF00FF; /* Magenta Neon */
+    --card-text-primary: #00FF00; /* Verde Fósforo */
+    --card-text-title: #00FFFF; /* Ciano Neon */
+    --card-text-answer: #FFFFFF; /* Branco */
+    --card-accent-bg: #FF00FF;
+    --card-accent-text: #212121;
+    --card-italic-border: #FFFF00; /* Amarelo Neon */
+
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    font-family: 'Press Start 2P', cursive;
+    position: relative;
+    overflow: hidden;
+}
+#knowledge-card.theme-retro::before { /* Efeito Scanlines */
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.3) 1px, transparent 1px);
+    background-size: 100% 3px;
+    z-index: 2;
+    pointer-events: none;
+}
+#knowledge-card.theme-retro * {
+    color: var(--card-text-primary);
+    z-index: 1;
+    position: relative;
+}
+#knowledge-card.theme-retro h3 { /* Título com brilho neon */
+    color: var(--card-text-title);
+    text-shadow: 0 0 5px var(--card-text-title), 0 0 10px var(--card-text-title);
+}
+#knowledge-card.theme-retro #result-technique {
+    background-color: var(--card-accent-bg);
+    color: var(--card-accent-text);
+}
+#knowledge-card.theme-retro .italic {
+    border-color: var(--card-italic-border);
+    color: var(--card-text-answer);
+}
+#knowledge-card.theme-retro p.text-slate-500 {
+    color: var(--card-text-primary) !important;
+}
+
+
+/* ==========================================================================
+   3. TEMAS DO MURAL (BODY)
+   ========================================================================== */
+
+/* Tema Floresta */
+body.theme-mural-forest {
+    --mural-bg: #1A4731;
+    --mural-text-primary: #F0FDF4;
+    --mural-text-secondary: #A3B3AF;
+    --mural-card-bg: #1E563A;
+
+    background-color: var(--mural-bg);
+}
+body.theme-mural-forest, body.theme-mural-forest .dark\:text-white { color: var(--mural-text-primary); }
+body.theme-mural-forest .dark\:text-slate-400 { color: var(--mural-text-secondary); }
+body.theme-mural-forest .bg-white { background-color: var(--mural-card-bg); }
+
+/* Tema Praia */
+body.theme-mural-beach {
+    --mural-bg: #FFF8E1;
+    --mural-text-primary: #5D4037;
+    --mural-text-secondary: #8D6E63;
+    --mural-card-bg: #FFECB3;
+
+    background-color: var(--mural-bg);
+}
+body.theme-mural-beach, body.theme-mural-beach .dark\:text-white { color: var(--mural-text-primary); }
+body.theme-mural-beach .dark\:text-slate-400 { color: var(--mural-text-secondary); }
+body.theme-mural-beach .bg-white { background-color: var(--mural-card-bg); }
+
+/* Tema Céu Lofi */
+body.theme-mural-lofi {
+    --mural-text-primary: #E0E0E0;
+    --mural-text-secondary: #a3a3a3;
+    --mural-card-bg: rgba(30, 41, 59, 0.5);
+
+    background-image: linear-gradient(to bottom, #434190, #212044, #101022);
+    position: relative;
+}
+body.theme-mural-lofi, body.theme-mural-lofi .dark\:text-white { color: var(--mural-text-primary); }
+body.theme-mural-lofi .dark\:text-slate-400 { color: var(--mural-text-secondary); }
+body.theme-mural-lofi .bg-white {
+    background-color: var(--mural-card-bg);
+    backdrop-filter: blur(4px);
+}
+
+/* Tema Jardim Zen */
+body.theme-mural-zen {
+    --mural-bg: #EAE8E1;
+    --mural-text-primary: #3A4F41;
+    --mural-text-secondary: #6B7D6E;
+    --mural-card-bg: rgba(255, 255, 255, 0.7);
+
+    background-color: var(--mural-bg);
+    background-image:
+        radial-gradient(circle at 100% 150%, #EAE8E1 24%, #FFF 25%, #FFF 28%, #EAE8E1 29%, #EAE8E1 36%, #FFF 36%, #FFF 40%, transparent 40%, transparent),
+        radial-gradient(circle at 0 150%, #EAE8E1 24%, #FFF 25%, #FFF 28%, #EAE8E1 29%, #EAE8E1 36%, #FFF 36%, #FFF 40%, transparent 40%, transparent),
+        radial-gradient(circle at 50% 100%, #FFF 10%, #EAE8E1 11%, #EAE8E1 23%, #FFF 24%, #FFF 30%, #EAE8E1 31%, #EAE8E1 43%, #FFF 44%, #FFF 50%, #EAE8E1 51%, #EAE8E1 63%, #FFF 64%, #FFF 71%, transparent 71%, transparent),
+        radial-gradient(circle at 100% 50%, #FFF 5%, #EAE8E1 6%, #EAE8E1 15%, #FFF 16%, #FFF 20%, #EAE8E1 21%, #EAE8E1 30%, #FFF 31%, #FFF 35%, #EAE8E1 36%, #EAE8E1 45%, #FFF 46%, #FFF 49%, transparent 50%, transparent),
+        radial-gradient(circle at 0 50%, #FFF 5%, #EAE8E1 6%, #EAE8E1 15%, #FFF 16%, #FFF 20%, #EAE8E1 21%, #EAE8E1 30%, #FFF 31%, #FFF 35%, #EAE8E1 36%, #EAE8E1 45%, #FFF 46%, #FFF 49%, transparent 50%, transparent);
+    background-size: 100px 50px;
+}
+body.theme-mural-zen, body.theme-mural-zen .dark\:text-white { color: var(--mural-text-primary); }
+body.theme-mural-zen .dark\:text-slate-400 { color: var(--mural-text-secondary); }
+body.theme-mural-zen .bg-white {
+    background-color: var(--mural-card-bg);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Tema Cabana na Montanha */
+body.theme-mural-cabin {
+    --mural-bg: #382e28;
+    --mural-text-primary: #f5eadd; /* Pergaminho claro */
+    --mural-text-secondary: #c4b7a6;
+    --mural-card-bg: rgba(245, 234, 221, 0.9);
+    --mural-card-text-primary: #5d4037; /* Marrom escuro */
+    --mural-card-text-secondary: #8d6e63; /* Marrom médio */
+
+    background-color: var(--mural-bg);
+    background-image: linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2)),
+                      linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2));
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
+body.theme-mural-cabin, body.theme-mural-cabin .dark\:text-white { color: var(--mural-text-primary); }
+body.theme-mural-cabin .dark\:text-slate-400 { color: var(--mural-text-secondary); }
+body.theme-mural-cabin .bg-white {
+    background-color: var(--mural-card-bg);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+body.theme-mural-cabin .bg-white,
+body.theme-mural-cabin .bg-white .dark\:text-white { color: var(--mural-card-text-primary); }
+body.theme-mural-cabin .bg-white .dark\:text-slate-400 { color: var(--mural-card-text-secondary); }
+
+/* Tema Retrô Arcade */
+body.theme-mural-retroMural {
+    --mural-bg: #190D30;
+    --mural-text-primary: #E5E7EB;
+    --mural-text-secondary: #9CA3AF;
+    --mural-card-bg: rgba(15, 23, 42, 0.7);
+    --mural-grid-line-cyan: rgba(0, 255, 255, 0.5);
+    --mural-grid-line-magenta: rgba(255, 0, 255, 0.5);
+    --mural-neon-border: #00FFFF;
+    
+    background-color: var(--mural-bg);
+    color: var(--mural-text-primary);
+    overflow-y: auto;
+    overflow-x: hidden; 
+}
+.theme-mural-retroMural .retro-background-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    perspective: 300px;
+}
+.theme-mural-retroMural .retro-background-container::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) rotateX(80deg);
+    transform-origin: bottom center;
+    width: 200vw; height: 100vh;
+    z-index: 0;
+    background-image: 
+        linear-gradient(to right, var(--mural-grid-line-cyan) 2px, transparent 2px),
+        linear-gradient(to bottom, var(--mural-grid-line-magenta) 2px, transparent 2px);
+    background-size: 80px 40px;
+    box-shadow: 0 0 15px var(--mural-grid-line-magenta), 0 0 25px var(--mural-grid-line-cyan);
+    mask-image: linear-gradient(to top, white 10%, transparent 80%);
+}
+body.theme-mural-retroMural h1,
+body.theme-mural-retroMural h2 {
+    font-family: 'Press Start 2P', cursive;
+    text-shadow: 0 0 5px var(--mural-neon-border);
+}
+body.theme-mural-retroMural, body.theme-mural-retroMural .dark\:text-white { color: var(--mural-text-primary); }
+body.theme-mural-retroMural .dark\:text-slate-400 { color: var(--mural-text-secondary); }
+body.theme-mural-retroMural .bg-white {
+    background-color: var(--mural-card-bg);
+    backdrop-filter: blur(4px);
+    border: 2px solid var(--mural-neon-border);
+    box-shadow: 0 0 10px var(--mural-neon-border);
+}
+
+/* AJUSTE DE CONTRASTE PARA O TEMA RETRÔ */
+body.theme-mural-retroMural .bg-white h3,
+body.theme-mural-retroMural .bg-white h4 {
+    color: var(--mural-neon-border);
+    text-shadow: 0 0 4px var(--mural-neon-border);
+}
+body.theme-mural-retroMural .bg-white .dark\:text-white {
+    color: #2dc1f7;
+}
+
+
+/* ==========================================================================
+   4. COMPONENTES
+   ========================================================================== */
+
+/* Flashcard (Revisão) */
+.flashcard { perspective: 1000px; }
+.flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    -webkit-backface-visibility: hidden; 
+    backface-visibility: hidden; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 2rem; 
+    border-radius: 1rem; 
+}
+.flashcard-back { transform: rotateY(180deg); }
+
+/* Barra de Progresso */
+.progress-bar-bg { 
+    background-color: #e5e7eb; 
+    border-radius: 9999px; 
+    overflow: hidden;
+}
+.progress-bar-fill { 
+    background-color: #3b82f6; 
+    height: 100%; 
+    border-radius: 9999px; 
+    transition: width 0.5s ease-in-out; 
+    text-align: right; 
+    color: white; 
+    font-size: 10px; 
+    padding-right: 5px;
+}
+.progress-bar-fill.completed { 
+    background-color: #22c55e; 
+}
