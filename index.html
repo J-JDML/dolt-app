@@ -34,10 +34,19 @@
         
         <section id="screen-welcome" class="relative space-y-8 fade-in">
              <div class="absolute top-0 right-0">
-                <button type="button" id="premium-btn" class="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-900 font-semibold py-2 px-4 rounded-lg shadow-lg hover:from-amber-500 hover:to-yellow-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-yellow-800"><path d="M19.14,2.5a2,2,0,0,0-1.28.45L12,8.27,6.14,2.95A2,2,0,0,0,4.86,2.5,2,2,0,0,0,3.52,4.78l1.37,6.85a2,2,0,0,0,2,1.65h10.22a2,2,0,0,0,2-1.65L20.48,4.78A2,2,0,0,0,19.14,2.5Z"></path><path d="M20.48,14.78,19.11,8,4.89,8,3.52,14.78a2,2,0,0,0,2,2.5h13a2,2,0,0,0,2-2.5Z"></path></svg>
-                    <span>Premium</span>
-                </button>
+                <div class="absolute top-0 right-0 flex items-center gap-2">
+    <div id="premium-status-badge" class="hidden items-center gap-2 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-900 font-semibold py-2 px-4 rounded-lg">
+         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-yellow-800"><path d="M19.14,2.5a2,2,0,0,0-1.28.45L12,8.27,6.14,2.95A2,2,0,0,0,4.86,2.5,2,2,0,0,0,3.52,4.78l1.37,6.85a2,2,0,0,0,2,1.65h10.22a2,2,0,0,0,2-1.65L20.48,4.78A2,2,0,0,0,19.14,2.5Z"></path><path d="M20.48,14.78,19.11,8,4.89,8,3.52,14.78a2,2,0,0,0,2,2.5h13a2,2,0,0,0,2-2.5Z"></path></svg>
+         <span>Você é Premium</span>
+    </div>
+    <a href="https://buy.stripe.com/test_14A9AT2x6fC61i01yL5Rm00" id="premium-btn" class="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-900 font-semibold py-2 px-4 rounded-lg shadow-lg hover:from-amber-500 hover:to-yellow-600 transition-all duration-300">
+         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-yellow-800"><path d="M19.14,2.5a2,2,0,0,0-1.28.45L12,8.27,6.14,2.95A2,2,0,0,0,4.86,2.5,2,2,0,0,0,3.52,4.78l1.37,6.85a2,2,0,0,0,2,1.65h10.22a2,2,0,0,0,2-1.65L20.48,4.78A2,2,0,0,0,19.14,2.5Z"></path><path d="M20.48,14.78,19.11,8,4.89,8,3.52,14.78a2,2,0,0,0,2,2.5h13a2,2,0,0,0,2-2.5Z"></path></svg>
+         <span>Seja Premium</span>
+    </a>
+    <button type="button" id="activate-premium-btn" class="bg-slate-700 text-white font-semibold py-2 px-4 rounded-lg shadow-lg hover:bg-slate-600">
+        Ativar Premium
+    </button>
+</div>
             </div>
 
             <div class="flex justify-center items-center gap-4">
@@ -395,7 +404,22 @@
             </div>
         </div>
     </div>
-
+<div id="activation-modal" role="dialog" aria-modal="true" aria-labelledby="activation-modal-title" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 w-full max-w-md space-y-4 transform transition-all scale-95 opacity-0">
+        <div class="flex justify-between items-center">
+             <h2 id="activation-modal-title" class="text-2xl font-bold dark:text-white">Ativar Passe Vitalício</h2>
+            <button type="button" id="activation-modal-close-btn" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 text-3xl leading-none">&times;</button>
+        </div>
+        <p class="text-slate-600 dark:text-slate-400">Cole a chave de ativação que você recebeu após a compra para desbloquear todos os recursos premium.</p>
+        <div class="space-y-2 text-left">
+            <label for="premium-key-input" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Chave de Ativação</label>
+            <input type="text" id="premium-key-input" class="w-full p-3 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg" placeholder="cole.sua.chave.aqui">
+        </div>
+        <div class="flex justify-end gap-4 pt-4">
+            <button type="button" id="activate-key-btn" class="w-full bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700">Ativar</button>
+        </div>
+    </div>
+</div>
     <script src="script.js" defer></script>
 </body>
 </html>

@@ -238,15 +238,43 @@ const DOM = {
     shareTwitterBtn: document.getElementById('share-twitter-btn'),
     shareLinkedInBtn: document.getElementById('share-linkedin-btn'),
     // Toast
-    toast: document.getElementById('toast'),
-    toastMessage: document.getElementById('toast-message'),
-    // Botão Premium
-    premiumBtn: document.getElementById('premium-btn'),
+   toast: document.getElementById('toast'),
+toastMessage: document.getElementById('toast-message'),
+// Botão Premium e Ativação
+premiumBtn: document.getElementById('premium-btn'),
+activatePremiumBtn: document.getElementById('activate-premium-btn'),
+premiumStatusBadge: document.getElementById('premium-status-badge'),
+// Modal de Ativação
+activationModal: document.getElementById('activation-modal'),
+activationModalCloseBtn: document.getElementById('activation-modal-close-btn'),
+premiumKeyInput: document.getElementById('premium-key-input'),
+activateKeyBtn: document.getElementById('activate-key-btn'),
 };
 
 
 // III. FUNÇÕES AUXILIARES (HELPERS)
 // =================================================================================
+
+
+function checkAndApplyPremiumStatus() {
+    if (localStorage.getItem('dolt_plan') === 'premium') {
+        userData.isPremium = true;
+        // Atualiza a UI para refletir o status premium
+        DOM.premiumBtn.classList.add('hidden');
+        DOM.activatePremiumBtn.classList.add('hidden');
+        DOM.premiumStatusBadge.classList.remove('hidden');
+        DOM.premiumStatusBadge.classList.add('flex'); // Garante que será exibido
+        
+        // Desbloqueia todos os itens na loja visualmente
+        // A lógica real de desbloqueio ocorrerá em populateUnlocksModal
+        console.log("Status Premium ativo.");
+    } else {
+        userData.isPremium = false;
+        DOM.premiumBtn.classList.remove('hidden');
+        DOM.activatePremiumBtn.classList.remove('hidden');
+        DOM.premiumStatusBadge.classList.add('hidden');
+    }
+}
 
 function showToast(message) {
     DOM.toastMessage.innerText = message;
@@ -326,6 +354,7 @@ function saveData() {
 }
 
 function loadData() {
+    checkAndApplyPremiumStatus();
     const savedData = localStorage.getItem('doltUserData');
     if (savedData) {
         try {
@@ -531,6 +560,44 @@ function tryUnlockItem(type, key) {
     }
 }
 
+async function handleActivatePremium() {
+    const key = DOM.premiumKeyInput.value.trim();
+    if (!key) {
+        showToast("Por favor, insira sua chave de ativação.");
+        return;
+    }
+
+    DOM.activateKeyBtn.disabled = true;
+    DOM.activateKeyBtn.textContent = 'Verificando...';
+
+    try {
+        const response = await fetch('/.netlify/functions/validate-key', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: key })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.valid) {
+            localStorage.setItem('dolt_plan', 'premium');
+            hideModal(DOM.activationModal);
+            showInfoModal('Sucesso!', 'Seu Passe Vitalício foi ativado. Bem-vindo(a) ao Premium!', () => {
+                // Recarrega o estado da aplicação para aplicar as mudanças
+                checkAndApplyPremiumStatus(); // Atualiza a UI imediatamente
+            });
+        } else {
+            throw new Error(result.message || 'Chave inválida.');
+        }
+
+    } catch (error) {
+        showToast(`Erro: ${error.message}`);
+    } finally {
+        DOM.activateKeyBtn.disabled = false;
+        DOM.activateKeyBtn.textContent = 'Ativar';
+        DOM.premiumKeyInput.value = '';
+    }
+}
 
 // VI. RENDERIZAÇÃO E ATUALIZAÇÃO DA UI
 // =================================================================================
@@ -1316,39 +1383,10 @@ DOM.shareDownloadCardBtn.addEventListener('click', () => {
     DOM.downloadCardBtn.click();
 });
 
-// EVENT LISTENER PARA O BOTÃO PREMIUM
-// =================================================================================
+DOM.activatePremiumBtn.addEventListener('click', () => showModal(DOM.activationModal));
+DOM.activationModalCloseBtn.addEventListener('click', () => hideModal(DOM.activationModal));
+DOM.activateKeyBtn.addEventListener('click', handleActivatePremium);
 
-DOM.premiumBtn.addEventListener('click', async () => {
-    // Desabilita o botão e mostra um estado de "carregando" para o usuário
-    DOM.premiumBtn.disabled = true;
-    DOM.premiumBtn.querySelector('span').textContent = 'Aguarde...';
-
-    try {
-        // 1. Chama a nossa Netlify Function para criar a sessão de checkout no Stripe
-        const response = await fetch('/.netlify/functions/create-checkout-session', {
-            method: 'POST',
-        });
-
-        // Se a resposta do servidor não for OK, lança um erro
-        if (!response.ok) {
-            throw new Error('Falha na comunicação com o servidor.');
-        }
-
-        // 2. Pega os dados da resposta (que contém a URL de pagamento)
-        const data = await response.json();
-        
-        // 3. Redireciona o usuário para a página de pagamento do Stripe
-        window.location.href = data.url;
-
-    } catch (error) {
-        // Em caso de erro, avisa o usuário e reabilita o botão
-        console.error('Erro ao redirecionar para o checkout:', error);
-        showToast('Ocorreu um erro. Tente novamente.'); // Usando sua função de toast!
-        DOM.premiumBtn.disabled = false;
-        DOM.premiumBtn.querySelector('span').textContent = 'Premium';
-    }
-});
 
 // XI. INICIALIZAÇÃO
 // =================================================================================
