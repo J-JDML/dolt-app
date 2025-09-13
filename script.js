@@ -571,7 +571,7 @@ async function handleActivatePremium() {
     DOM.activateKeyBtn.textContent = 'Verificando...';
 
     try {
-        const response = await fetch('/.netlify/functions/validate-key', {
+        const response = await fetch('/api/validate-key', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: key })

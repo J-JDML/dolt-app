@@ -41,7 +41,7 @@
         // Ao carregar a página, chama a função para gerar a chave
         window.onload = async () => {
             try {
-                const response = await fetch('/.netlify/functions/generate-key');
+                const response = await fetch('/api/generate-key');
                 if (!response.ok) throw new Error('Falha na resposta do servidor.');
                 
                 const data = await response.json();
